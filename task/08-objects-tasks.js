@@ -159,12 +159,6 @@ class Selector {
     }
 
     check_order(curr_elem) {
-        // if (!this.selectors.includes(curr_elem)) {
-        //     throw new Error("Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element");
-        // }
-        // while(this.selectors[0] != curr_elem) { 
-        //     this.selectors.shift();         
-        // }
         if (this.index_of_selector > this.selectors.indexOf(curr_elem)) {
             throw new Error("Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element");
         }
