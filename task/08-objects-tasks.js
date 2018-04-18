@@ -24,7 +24,12 @@
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-    throw new Error('Not implemented');
+    this.width = width;
+    this.height = height;
+}
+
+Rectangle.prototype.getArea = function() {
+    return this.height * this.width;
 }
 
 
@@ -39,7 +44,7 @@ function Rectangle(width, height) {
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
 function getJSON(obj) {
-    throw new Error('Not implemented');
+    return JSON.stringify(obj);
 }
 
 
@@ -55,7 +60,7 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-    throw new Error('Not implemented');
+    return Object.assign(new proto.constructor(), JSON.parse(json));
 }
 
 
@@ -110,35 +115,140 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-
     element: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().element(value);
     },
 
     id: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().id(value);
     },
 
     class: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().class(value);
     },
 
     attr: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().attr(value);
     },
 
     pseudoClass: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().pseudoClass(value);
     },
 
     pseudoElement: function(value) {
-        throw new Error('Not implemented');
+        return new Selector().pseudoElement(value);
     },
 
     combine: function(selector1, combinator, selector2) {
-        throw new Error('Not implemented');
-    },
+        return new Selector().combine(selector1, combinator, selector2);
+    }
 };
+
+class Selector {
+    constructor() {
+        this.index_of_selector = 0;
+        this.element_val = null;
+        this.id_val = null;
+        this.classes = [];
+        this.attributes = [];
+        this.pseudoClasses = [];
+        this.pseudoElement_val = null;
+        this.selectors = ['element', 'id', 'class', 'attr', 'pseudoClass', 'pseudoElement', 'combine'];
+        this.combinator = null;
+        this.selector2 = null;
+    }
+
+    check_order(curr_elem) {
+        // if (!this.selectors.includes(curr_elem)) {
+        //     throw new Error("Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element");
+        // }
+        // while(this.selectors[0] != curr_elem) { 
+        //     this.selectors.shift();         
+        // }
+        if (this.index_of_selector > this.selectors.indexOf(curr_elem)) {
+            throw new Error("Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element");
+        }
+        this.index_of_selector = this.selectors.indexOf(curr_elem);
+    }
+
+    element(value) {
+        this.check_order('element');
+        if (!this.element_val) {
+            this.element_val = value;
+        } else {
+            throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+        }
+        return this;
+    }
+
+    id(value) {
+        this.check_order('id');
+        if (!this.id_val) {
+            this.id_val = value;
+        } else {
+            throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+        }
+        return this;
+    }
+
+    class(value) {
+        this.check_order('class');
+        this.classes.push(value);
+        return this;
+    }
+
+    attr(value) {
+        this.check_order('attr');
+        this.attributes.push(value);
+        return this;
+    }
+
+    pseudoClass(value) {
+        this.check_order('pseudoClass');
+        this.pseudoClasses.push(value);
+        return this;
+    }
+
+    pseudoElement(value) {
+        this.check_order('pseudoElement');
+        if (!this.pseudoElement_val) {
+            this.pseudoElement_val = value;
+        } else {
+            throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+        }
+        return this;
+    }
+
+    combine(selector1, combinator, selector2) {
+        this.check_order('combine');
+        Object.assign(this, selector1);
+        this.combinator = combinator;
+        this.selector2 = selector2;
+        return this;
+    }
+
+    stringify() {
+        let result  = '';
+        if (this.element_val) { 
+            result += this.element_val;
+        }
+        if (this.id_val) {
+            result += '#' + this.id_val;
+        }
+
+        this.classes.forEach (v => result += '.' + v);
+        this.attributes.forEach (v => result += '[' + v + ']');
+        this.pseudoClasses.forEach (v => result += ':' + v); 
+
+        if (this.pseudoElement_val) { 
+            result += '::' + this.pseudoElement_val;
+        }
+        if (this.combinator && this.selector2) {
+            result += ' ' + this.combinator + ' ' + this.selector2.stringify();
+        }
+        return result; 
+    }
+}
 
 
 module.exports = {
