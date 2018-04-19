@@ -10,7 +10,7 @@
  * @return {bool}
  *
  * @example
- *   var puzzle = [ 
+ *   let puzzle = [ 
  *      'ANGULAR',
  *      'REDNCAE',
  *      'RFIDTCL',
@@ -28,51 +28,62 @@
  *   'NULL'      => false 
  */
 function findStringInSnakingPuzzle(puzzle, searchStr) {
-    function IsInPosArr(posArr, pos) {
-        for (let arrPos of posArr) {
-            if ((arrPos[0] == pos[0]) && (arrPos[1] == pos[1])) {
+    puzzle.forEach(elem => elem = elem.split(''));
+
+    function getNeighbours(point) {
+        const neighbours = [];
+
+        if (point.i != 0) {
+            neighbours.push({i: point.i - 1, j: point.j});
+        }
+        if (point.j != 0) {
+            neighbours.push({i: point.i, j: point.j - 1});
+        }
+        if (point.i != puzzle.length - 1) {
+            neighbours.push({i: point.i + 1, j: point.j});
+        }
+        if (point.j != puzzle[0].length - 1) {
+            neighbours.push({i: point.i, j: point.j + 1});
+        }
+
+        return neighbours;
+    }
+
+    function isSnakingString(point, string, trace) {
+        if (string == '') {
+            return true;
+        }
+
+        const neighbours = getNeighbours(point);
+        let newTrace = trace;
+        newTrace.push(point);
+        for (let neighb of neighbours) {
+            if (puzzle[neighb.i][neighb.j] == string[0] &&
+                trace.find(elem => elem.i == neighb.i && elem.j == neighb.j) == undefined &&
+                isSnakingString(neighb, string.slice(1), newTrace))
+            {
                 return true;
             }
         }
         return false;
     }
 
-    function IsHere(puzzle, word, curLetterNum, curPos) {
-        if (curLetterNum == word.length - 1) {
-            if ((puzzle[curPos[0]][curPos[1]] == word[curLetterNum]) && (!IsInPosArr(wasInRow, [curPos[0], curPos[1]]))) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if ((puzzle[curPos[0]][curPos[1]] == word[curLetterNum]) && (!IsInPosArr(wasInRow, [curPos[0], curPos[1]]))) {
-                let result = false;
-                wasInRow.push([curPos[0], curPos[1]]);
-                if (curPos[0] > 0)
-                    result = result || IsHere(puzzle, word, curLetterNum + 1, [curPos[0] - 1, curPos[1]]);
-                if (curPos[1] < puzzle[curPos[0]].length - 1)
-                    result = result || IsHere(puzzle, word, curLetterNum + 1, [curPos[0], curPos[1] + 1]);
-                if (curPos[0] < puzzle.length - 1)
-                    result = result || IsHere(puzzle, word, curLetterNum + 1, [curPos[0] + 1, curPos[1]]);
-                if (curPos[1] > 0)
-                    result = result || IsHere(puzzle, word, curLetterNum + 1, [curPos[0], curPos[1] - 1]);
-                wasInRow.pop();
-                return result;
-            } else {
-                return false;
-            }
-        }
-    }
-    
-    let result = false;
-    let wasInRow = new Array();
+    const headCandidates = [];
     for (let i = 0; i < puzzle.length; i++) {
-        for (let j = 0; j < puzzle[i].length; j++) {
-            result = result || IsHere(puzzle, searchStr, 0, [i, j]);
+        for (let j = 0; j < puzzle[0].length; j++) {
+            if (puzzle[i][j] == searchStr[0]) {
+                headCandidates.push({i: i, j: j});
+            }
         }
     }
-    return result;
+    for (let candidate of headCandidates) {
+        if (isSnakingString(candidate, searchStr.slice(1), [])) {
+            return true;
+        }
+    }
+    return false;
 }
+
 
 
 /**
@@ -108,7 +119,7 @@ function* getPermutations(chars) {
 		}
 	}
 	
-	yield *HeapsAlgorithm(chars.length, chars.split(''));
+    yield *HeapsAlgorithm(chars.length, chars.split(''));
 }
 
 
@@ -145,9 +156,9 @@ function getMostProfitFromStockQuotes(quotes) {
  *
  * @example
  *    
- *     var urlShortener = new UrlShortener();
- *     var shortLink = urlShortener.encode('https://en.wikipedia.org/wiki/URL_shortening');
- *     var original  = urlShortener.decode(shortLink); // => 'https://en.wikipedia.org/wiki/URL_shortening'
+ *     let urlShortener = new UrlShortener();
+ *     let shortLink = urlShortener.encode('https://en.wikipedia.org/wiki/URL_shortening');
+ *     let original  = urlShortener.decode(shortLink); // => 'https://en.wikipedia.org/wiki/URL_shortening'
  * 
  */
 function UrlShortener() {
@@ -161,8 +172,8 @@ UrlShortener.prototype = {
     encode: function(url) {
     	let result = new String();
     	let char1, char2, newChar;
-		for (let i = 0; i + 1 < url.length; i += 2) {
-			char1 = url.charCodeAt(i);
+		for (let i = 0; i < url.length - 1; i += 2) {
+			char1 = url.charCodeAt(i); 
 			char2 = url.charCodeAt(i + 1);
 			newChar = (char1 << 8) + char2;
 			result += String.fromCharCode(newChar);

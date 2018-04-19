@@ -90,7 +90,7 @@ function* getFibonacciSequence() {
  * @return {Iterable.<object>} последовательность всех вершин в порядке поиска в глубину
  * @example
  *
- *   var node1 = { n:1 }, node2 = { n:2 }, node3 = { n:3 }, node4 = { n:4 },
+ *   let node1 = { n:1 }, node2 = { n:2 }, node3 = { n:3 }, node4 = { n:4 },
  *       node5 = { n:5 }, node6 = { n:6 }, node7 = { n:7 }, node8 = { n:8 };
  *   node1.children = [ node2, node6, node7 ];
  *   node2.children = [ node3, node4 ];

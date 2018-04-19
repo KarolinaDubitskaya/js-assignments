@@ -40,11 +40,11 @@ function getComposition(f,g) {
  * @return {Function}
  *
  * @example
- *   var power2 = getPowerFunction(2); // => x^2
+ *   let power2 = getPowerFunction(2); // => x^2
  *   power2(2) => 4
  *   power2(4) => 16
  *
- *   var power05 = getPowerFunction(0.5); // => x^0.5
+ *   let power05 = getPowerFunction(0.5); // => x^0.5
  *   power05(4) => 2
  *   power05(16) => 4
  *
@@ -87,7 +87,7 @@ function getPolynom() {
  * @return {Function} запомненная функция
  *
  * @example
- *   var memoizer = memoize(() => Math.random());
+ *   let memoizer = memoize(() => Math.random());
  *   memoizer() => любое рандомное число (при первом запуске вычисляется Math.random())
  *   memoizer() => тоже раномное число (при втором запуске возвращается закешированный результат)
  *   ...
@@ -113,7 +113,7 @@ function memoize(func) {
  * @return {Function}
  *
  * @example
- * var attempt = 0, retryer = retry(() => {
+ * let attempt = 0, retryer = retry(() => {
  *      if (++attempt % 2) throw new Error('test');
  *      else return attempt;
  * }, 2);
@@ -146,8 +146,8 @@ function retry(func, attempts) {
  *
  * @example
  *
- * var cosLogger = logger(Math.cos, console.log);
- * var result = cosLogger(Math.PI));     // -1
+ * let cosLogger = logger(Math.cos, console.log);
+ * let result = cosLogger(Math.PI));     // -1
  *
  * log from console.log:
  * cos(3.141592653589793) starts
@@ -173,7 +173,7 @@ function logger(func, logFunc) {
  * @return {Function}
  *
  * @example
- *   var fn = function(x1,x2,x3,x4) { return  x1 + x2 + x3 + x4; };
+ *   let fn = function(x1,x2,x3,x4) { return  x1 + x2 + x3 + x4; };
  *   partialUsingArguments(fn, 'a')('b','c','d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b')('c','d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
@@ -195,8 +195,8 @@ function partialUsingArguments(fn) {
  * @return {Function}
  *
  * @example
- *   var getId4 = getIdGenerator(4);
- *   var getId10 = gerIdGenerator(10);
+ *   let getId4 = getIdGenerator(4);
+ *   let getId10 = gerIdGenerator(10);
  *   getId4() => 4
  *   getId10() => 10
  *   getId4() => 5

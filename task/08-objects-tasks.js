@@ -18,7 +18,7 @@
  * @return {Object}
  *
  * @example
- *    var r = new Rectangle(10,20);
+ *    let r = new Rectangle(10,20);
  *    console.log(r.width);       // => 10
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
@@ -56,7 +56,7 @@ function getJSON(obj) {
  * @return {object}
  *
  * @example
- *    var r = fromJSON(Rectangle.prototype, '{"width":10, "height":20}');
+ *    let r = fromJSON(Rectangle.prototype, '{"width":10, "height":20}');
  *
  */
 function fromJSON(proto, json) {
@@ -91,7 +91,7 @@ function fromJSON(proto, json) {
  *
  * @example
  *
- *  var builder = cssSelectorBuilder;
+ *  let builder = cssSelectorBuilder;
  *
  *  builder.id('main').class('container').class('editable').stringify()  => '#main.container.editable'
  *
